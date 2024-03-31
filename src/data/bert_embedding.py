@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 from sklearn import decomposition
 
+import pathlib
+
 from src.data.utils import (create_uuid_from_string, get_path,
                             headline_processing, pickle_results)
 from src.meta_data import get_meta_data
@@ -19,9 +21,8 @@ def get_news_path() -> List[str]:
         List[str]: list of paths
     """
     meta_data = get_meta_data()
-    reuters_dir = meta_data['REUTERS_DIR']
-    bloomberg_dir = meta_data['BLOOMBERG_DIR']
-    return get_path(reuters_dir) + get_path(bloomberg_dir)
+    news_dir = meta_data['NEWS_DIR']
+    return get_path(news_dir)
 
 
 def single_file_process(path: str) -> str:
@@ -81,8 +82,17 @@ def embedding_batch_preprocessing(
         List[Tuple[str, str, str]]: date, news_id, and processed news headlines
     """
     ncores = ncores if ncores is not None else mp.cpu_count()
-    with mp.Pool(processes=ncores) as p:
-        out = p.map(bert_processing, paths)
+    out = []
+    for path in paths:
+        print(path)
+        with open(path) as f:
+            df = pd.read_csv(path)
+            #print(df.head())
+            df["news_id"] = pathlib.Path(path).stem + "_" + df[df.columns[0]].astype(str)
+            #print(df[["date", "news_id", "headline"]].head())
+
+        out.append(df[["date", "news_id", "headline"]])
+    out = pd.concat(out).values
 
     return out
 
@@ -199,7 +209,7 @@ def bert_compression(
 if __name__ == '__main__':
     from src.data.utils import (get_raw_news, headline_preprocessing,
                                 sample_news)
-    path = sample_news(os.environ['REUTERS_DIR'])
+    path = sample_news(os.environ['NEWS_DIR'])
     print(single_file_process(path))
     print(headline_preprocessing(single_file_process(path)))
     print(get_raw_news(path))
