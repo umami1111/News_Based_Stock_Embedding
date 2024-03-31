@@ -1,3 +1,24 @@
+## FOR HACKATHON
+```
+# When running on scholar cluster
+$ module purge
+The following modules were not unloaded:
+  (Use "module --force purge" to unload all):
+
+  1) xalt/1.1.2
+$ module load cuda/11.8.0
+$ module load cudnn
+$ module load anaconda/2020.11-py38
+$ conda create --name st
+$ conda activate st
+$ pip install torch torchvision torchaudio click sentence-transformers fastparquet pyarrow scikit-learn pandas pandas-market-calendars
+
+# NEED raw_analyst_ratings.csv in news/analyst_ratings/ and raw_partner_headlines.csv in news/partner_headlines/
+# dataset URL: https://www.kaggle.com/datasets/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests/data
+# NOTE: still fail after generating sentence embedding
+$ sh run.sh
+```
+
 ## Introduction
 This repo is implemented according to the methodology described in paper [_Stock Embeddings Acquired from News Articles and Price History, and an Application to Portfolio Optimization_](https://aclanthology.org/2020.acl-main.307/).
 
