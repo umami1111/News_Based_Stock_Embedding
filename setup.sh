@@ -11,7 +11,7 @@ pip3 install sentence-transformers
 pip install fastparquet==2023.4.0
 pip install pyarrow==12.0.1
 
-# prepare a separate env for tensorflow as it cannot live with pytorch
+# prepare a separate env for tensorflow as well since it cannot live with pytorch
 conda deactivate
 conda create --name tf python=3.9
 conda activate tf
