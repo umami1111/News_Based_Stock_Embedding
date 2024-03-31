@@ -4,6 +4,7 @@
 !/**/
 # add whitelist
 !.gitignore
+!.gitkeep
 !*.py
 !*.mds
 !*.png
